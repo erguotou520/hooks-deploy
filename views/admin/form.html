@@ -1,57 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel</title>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/tailwindcss/2.1.1/tailwind.min.css">
-</head>
-<body>
-<div class="container mx-auto p-4">
-  <form action="./save" method="POST">
-    {{if .project}}
-    <input type="hidden" name="id">
+{{define "content"}}
+  <form action="/admin/save" method="POST">
+    {{if .project.ID}}
+    <input type="hidden" name="id" value="{{.project.ID}}">
     {{end}}
     <div class="flex flex-col mb-4">
-      <label for="name" class="mb-2 font-bold text-lg">应用名称</label>
-      <input required name="name" type="text" class="border py-2 px-3">
+      <label for="type" class="mb-2 font-bold text-lg">源码来源</label>
+      <select required value="{{.project.Type}}" name="type" class="border py-2 px-3">
+        <option value="codeup">云效CodeUp</option>
+      </select>
     </div>
-    <!-- <div class="flex flex-col mb-4">
+    <div class="flex flex-col mb-4">
+      <label for="name" class="mb-2 font-bold text-lg">应用名称</label>
+      <input required name="name" value="{{.project.Name}}" type="text" class="border py-2 px-3">
+    </div>
+    <div class="flex flex-col mb-4">
       <label for="token" class="mb-2 font-bold text-lg">Secret Token</label>
-      <input name="token" type="text" class="border py-2 px-3">
+      <input name="token" value="{{.project.Token}}" type="text" class="border py-2 px-3">
     </div>
     <div class="flex flex-col mb-4">
       <label for="testScript" class="mb-2 font-bold text-lg">测试脚本</label>
-      <input placeholder="yarn test" name="testScript" type="text" class="border py-2 px-3">
+      <input placeholder="yarn test" name="testScript" value="{{.project.TestScript}}" type="text" class="border py-2 px-3">
     </div>
     <div class="flex flex-col mb-4">
       <label for="buildScript" class="mb-2 font-bold text-lg">构建脚本</label>
-      <input value="yarn build" placeholder="yarn build" name="buildScript" type="text" class="border py-2 px-3">
-    </div> -->
+      <input value="yarn build" placeholder="yarn build" name="buildScript" value="{{.project.BuildScript}}" type="text" class="border py-2 px-3">
+    </div>
     <div class="flex flex-col mb-4">
       <label for="distDir" class="mb-2 font-bold text-lg">静态文件目录</label>
-      <input required value="dist" name="distDir" type="text" class="border py-2 px-3">
+      <input required name="distDir" value="{{.project.DistDir}}" type="text" class="border py-2 px-3">
     </div>
-    <!-- <div class="flex flex-col mb-4">
+    <div class="flex flex-col mb-4">
+      <label for="spa" class="mb-2 font-bold text-lg">是否是SPA项目</label>
+      <input type="checkbox" name="spa" {{if .project.SPA}}checked{{end}} class="border py-2 px-3" value="1">
+    </div>
+    <div class="flex flex-col mb-4">
       <label for="branch" class="mb-2 font-bold text-lg">只构建指定分支</label>
-      <input placeholder="develop" name="branch" type="text" class="border py-2 px-3">
+      <input placeholder="develop" name="branch" value="{{.project.Branch}}" type="text" class="border py-2 px-3">
     </div>
     <div class="flex flex-col mb-4">
       <label for="tag" class="mb-2 font-bold text-lg">只构建打Tag的提交</label>
-      <input type="checkbox" name="tag" class="border py-2 px-3">
+      <!-- <span>{{.project.Tag}}</span> -->
+      <input type="checkbox" name="tag" {{if .project.Tag}}checked{{end}} class="border py-2 px-3" value="1">
     </div>
     <div class="flex flex-col mb-4">
       <label for="tagMatcher" class="mb-2 font-bold text-lg">Tag匹配规则</label>
-      <input placeholder="^v" name="tagMatcher" type="text" class="border py-2 px-3">
-    </div> -->
+      <input placeholder="^v" name="tagMatcher" value="{{.project.TagMatcher}}" type="text" class="border py-2 px-3">
+    </div>
     <div class="flex flex-col mb-4">
       <label for="domain" class="mb-2 font-bold text-lg">域名地址</label>
-      <input required placeholder="xxx.xxx.com" name="domain" type="text" class="border py-2 px-3">
+      <input required placeholder="xxx.xxx.com" name="domain" value="{{.project.Domain}}" type="text" class="border py-2 px-3">
     </div>
     <div class="flex flex-col mb-4">
       <label class="mb-2 font-bold text-lg">rewrite规则</label>
-      <!-- <table class="min-w-full divide-y divide-gray-200">
+      <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -78,10 +79,8 @@
             </td>
           </tr>
         </tbody>
-      </table> -->
+      </table>
     </div>
     <button class="block bg-blue-400 hover:bg-blue-600 text-white text-lg mx-auto px-3 py-2 rounded" type="submit">保存</button>
   </form>
-</div>
-</body>
-</html>
+{{end}}

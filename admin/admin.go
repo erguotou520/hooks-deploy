@@ -7,50 +7,63 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/foolin/goview/supports/ginview"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 func AdminPage(c *gin.Context) {
-	log.Println("home")
 	var projects []models.Project
 	db.DB.Find(&projects)
-	log.Println(projects)
-	c.HTML(http.StatusOK, "home.html", gin.H{
+	ginview.HTML(c, http.StatusOK, "home", gin.H{
 		"projects": projects,
 	})
 }
 
 func FormPage(c *gin.Context) {
 	id := c.Param("id")
-	var project models.Project
 	if id != "" {
+		var project models.ProjectForm
 		result := db.DB.First(&project, id)
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			c.HTML(http.StatusOK, "404.html", nil)
+			ginview.HTML(c, http.StatusOK, "404", nil)
 		} else {
-			c.HTML(http.StatusOK, "form.html", gin.H{
+			ginview.HTML(c, http.StatusOK, "form", gin.H{
 				"project": project,
 			})
 		}
 	} else {
-		c.HTML(http.StatusOK, "form.html", nil)
+		ginview.HTML(c, http.StatusOK, "form", gin.H{
+			"project": models.Project{
+				Type:    "codeup",
+				DistDir: "dist",
+				SPA:     true,
+			},
+		})
 	}
 }
 
 func SaveForm(c *gin.Context) {
-	var project models.Project
+	var project models.ProjectForm
 	err := c.Bind(&project)
 	if err == nil {
+		log.Println(project)
+		var dbProject = project.ToProject()
 		if project.ID == 0 {
-			db.DB.Create(&project)
+			db.DB.Create(&dbProject)
 		} else {
-			db.DB.Save(&project)
+			db.DB.Save(&dbProject)
 		}
-		c.HTML(http.StatusOK, "saved.html", gin.H{
-			"id": project.ID,
+		ginview.HTML(c, http.StatusOK, "saved", gin.H{
+			"id": dbProject.ID,
 		})
 	} else {
 		log.Println(err)
 	}
+}
+
+func DeleteProject(c *gin.Context) {
+	id := c.Param("id")
+	db.DB.Delete(&models.Project{}, id)
+	c.Status(http.StatusOK)
 }

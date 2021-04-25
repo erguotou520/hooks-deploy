@@ -1,0 +1,32 @@
+{{define "content"}}
+  {{range .projects}}
+    <div class="flex item-center">
+      <div class="pr-4">{{.Name}}</div>
+      <div class="ml-auto">
+        <a href="./edit/{{.ID}}">编辑</a>
+        <a href="javascript: void 0" onclick="removeProject({{.ID}})">删除</a>
+      </div>
+    </div>
+  {{else}}
+  <div class="flex flex-col items-center text-gray-500">
+    <div class="mb-4">还没有项目</div>
+  </div>
+  {{end}}
+  <a href="./new"><button class="block bg-blue-400 hover:bg-blue-600 text-white mx-auto px-3 py-2 rounded">点击创建</button></a>
+
+  <script>
+    function removeProject(id) {
+      if (window.confirm('确定要删除该项目么？')) {
+        fetch('/admin/project/' + id, {
+          method: 'DELETE'
+        }).then(resp => {
+          if (resp.ok) {
+            location.reload()
+          }
+        }).catch(err => {
+          window.alert(err)
+        })
+      }
+    }
+  </script>
+{{end}}
