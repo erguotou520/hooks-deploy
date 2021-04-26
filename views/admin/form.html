@@ -48,7 +48,7 @@
     </div>
     <div class="flex flex-col mb-4">
       <label for="domain" class="mb-2 font-bold text-lg">域名地址</label>
-      <input required placeholder="xxx.xxx.com" name="domain" value="{{.project.Domain}}" type="text" class="border py-2 px-3">
+      <input placeholder="xxx.xxx.com" name="domain" value="{{.project.Domain}}" type="text" class="border py-2 px-3">
     </div>
     <div class="flex flex-col mb-4">
       <label class="mb-2 font-bold text-lg">rewrite规则</label>
@@ -73,6 +73,17 @@
             </td>
             <td class="px-6 py-4">
               <input type="text" name="rewrites[0].to" class="w-full border py-1 px-3">
+            </td>
+            <td class="px-6 py-4 text-right text-sm font-medium">
+              <a href="javascript(void:0)" class="text-blue-400 hover:text-blue-600">删除</a>
+            </td>
+          </tr>
+          <tr>
+            <td class="px-6 py-4">
+              <input type="text" name="rewrites[1].from" class="w-full border py-1 px-3">
+            </td>
+            <td class="px-6 py-4">
+              <input type="text" name="rewrites[1].to" class="w-full border py-1 px-3">
             </td>
             <td class="px-6 py-4 text-right text-sm font-medium">
               <a href="javascript(void:0)" class="text-blue-400 hover:text-blue-600">删除</a>

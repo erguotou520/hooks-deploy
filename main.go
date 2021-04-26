@@ -1,15 +1,13 @@
 package main
 
 import (
-	"codeup-auto-deploy/admin"
+	"codeup-auto-deploy/api"
 	"codeup-auto-deploy/db"
 	"codeup-auto-deploy/webhooks"
 	"log"
 	"net/http"
 	"os"
 
-	"github.com/foolin/goview"
-	"github.com/foolin/goview/supports/ginview"
 	"github.com/gin-gonic/gin"
 )
 
@@ -65,27 +63,34 @@ func main() {
 	log.Println(adminAccounts)
 
 	// admin template
-	adminTemp := ginview.NewMiddleware(goview.Config{
-		Root:      "views/admin",
-		Extension: ".html",
-		Master:    "layouts/master",
-		Partials:  []string{},
-		// Partials:  []string{"partials/ad"},
-		// Funcs: template.FuncMap{
-		// 	"copy": func() string {
-		// 		return time.Now().Format("2006")
-		// 	},
-		// },
-		DisableCache: true,
-	})
+	// adminTemp := ginview.NewMiddleware(goview.Config{
+	// 	Root:      "views/admin",
+	// 	Extension: ".html",
+	// 	Master:    "layouts/master",
+	// 	Partials:  []string{},
+	// 	// Partials:  []string{"partials/ad"},
+	// 	// Funcs: template.FuncMap{
+	// 	// 	"copy": func() string {
+	// 	// 		return time.Now().Format("2006")
+	// 	// 	},
+	// 	// },
+	// 	DisableCache: true,
+	// })
 
-	adminG := r.Group("/admin", gin.BasicAuth(adminAccounts), adminTemp)
+	// adminG := r.Group("/admin", gin.BasicAuth(adminAccounts), adminTemp)
+	// {
+	// 	adminG.GET("/", admin.AdminPage)
+	// 	adminG.GET("/new", admin.FormPage)
+	// 	adminG.GET("/edit/:id", admin.FormPage)
+	// 	adminG.POST("/save", admin.SaveForm)
+	// 	adminG.DELETE("/project/:id", admin.DeleteProject)
+	// }
+	apiG := r.Group("/api", gin.BasicAuth(adminAccounts))
 	{
-		adminG.GET("/", admin.AdminPage)
-		adminG.GET("/new", admin.FormPage)
-		adminG.GET("/edit/:id", admin.FormPage)
-		adminG.POST("/save", admin.SaveForm)
-		adminG.DELETE("/project/:id", admin.DeleteProject)
+		apiG.GET("/projects", api.GetProjects)
+		apiG.GET("/projects/:id", api.GetProject)
+		apiG.POST("/projects", api.SaveProject)
+		apiG.DELETE("/project/:id", api.DeleteProject)
 	}
 
 	// test api
